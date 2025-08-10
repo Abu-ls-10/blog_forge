@@ -6,11 +6,11 @@
 
 ## 📖 Project Overview
 
-**BlogForce** is a no-code, web-based SEO content engine that automates the creation of high-quality, search-optimized blog posts. By removing the need for technical or SEO expertise, BlogForce enables day-one content creators to produce professional, search-friendly content with just a few clicks.
+**BlogForge** is a no-code, web-based SEO content engine that automates the creation of high-quality, search-optimized blog posts. By removing the need for technical or SEO expertise, BlogForge enables day-one content creators to produce professional, search-friendly content with just a few clicks.
 
-Designed for marketers, content creators, and small business owners, BlogForce dramatically reduces the time and cost of producing scalable content. Users can enter a topic or keyword and instantly generate SEO-ready blog posts, making it possible to start improving search rankings right away.
+Designed for marketers, content creators, and small business owners, BlogForge dramatically reduces the time and cost of producing scalable content. Users can enter a topic or keyword and instantly generate SEO-ready blog posts, making it possible to start improving search rankings right away.
 
-Built with React, TailwindCSS, Supabase, and n8n, BlogForce combines a modern frontend with automated backend workflows to deliver a seamless and beginner-friendly content creation experience.
+Built with React, TailwindCSS, Supabase, and n8n, BlogForge combines a modern frontend with automated backend workflows to deliver a seamless and beginner-friendly content creation experience.
 
 🌐 **Live App:** [here](https://6-seo-search-engine.vercel.app/)
 
@@ -63,7 +63,7 @@ Built with React, TailwindCSS, Supabase, and n8n, BlogForce combines a modern fr
 
 ## 📖 Usage Guide
 
-Follow these steps to get started with BlogForce:
+Follow these steps to get started with BlogForge:
 
 ### 1️⃣ Sign Up and Log In
 
@@ -75,7 +75,7 @@ Follow these steps to get started with BlogForce:
 
 - Navigate to the Branding Page.
 
-- Fill out the Content Strategy Intake Form to help BlogForce tailor blog posts to your brand’s identity.
+- Fill out the Content Strategy Intake Form to help BlogForge tailor blog posts to your brand’s identity.
 
 ### 3️⃣ Generate Your First Blog Post
 

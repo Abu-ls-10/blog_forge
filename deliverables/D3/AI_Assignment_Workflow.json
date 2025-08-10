@@ -1,0 +1,446 @@
+{
+  "name": "Workflow + AI Assignment Researcher",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Blog Post Submission Form",
+        "formDescription": "Provides a structured blog post based on the following fields.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Topic of Blog Post",
+              "placeholder": "eg. Dog Parks in Toronto",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tone",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Professional"
+                  },
+                  {
+                    "option": "Witty"
+                  },
+                  {
+                    "option": "Conversational"
+                  },
+                  {
+                    "option": "Sarcastic"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Target Audience",
+              "placeholder": "eg. Pet Owners or Potential Customers",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -960,
+        400
+      ],
+      "id": "4420479c-8a44-4b72-8b2e-6e71027f579b",
+      "name": "On form submission",
+      "webhookId": "4f9e114e-fb68-404a-9fd5-2b3310e061fd"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        -720,
+        720
+      ],
+      "id": "172cbaac-2a0a-43f8-8963-7ed1a7ef1ae8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "phru1AMRCzwjmxvV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Your job is to split out the table of contents into an individual item for each section. Output each section separately in a field called \"blogpostSections\". When doing so, keep in mind that the blog post target audience is {{ $('On form submission').item.json['Target Audience'] }} and the tone of the blog post should be {{ $('On form submission').item.json.Tone }}\n\nHere is the table of contents: {{ $json.output }}\n\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -460,
+        400
+      ],
+      "id": "edc24712-3e92-45cc-82b7-4ea54fd9dcc5",
+      "name": "Project Planner",
+      "credentials": {
+        "openAiApi": {
+          "id": "phru1AMRCzwjmxvV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": " message.content.blogpostSections",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        400
+      ],
+      "id": "f62dd783-9189-4d7f-82e3-f68c2bb360c9",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Section Title: {{ $('Split Out').item.json.title }}\n\nSection Description: {{ $('Split Out').item.json.description }}\n\nNewsletter Target Audience: {{ $('On form submission').item.json['Target Audience'] }}\n\nNewsletter Tone: {{ $('On form submission').item.json.Tone }}",
+        "options": {
+          "systemMessage": "=# Overview  \nYou are an AI agent responsible for delivering only the final content for a blog post section. Your role is to produce concise, well-researched, and audience-tailored content based solely on the provided inputs, with no prefacing statements or explanations. Another aspect which is important is that what content you create should be Search Engine Optimized (SEO) which implies that the information put into the blog post must attract users by improving search rankings on Google following their E-E-A-T guidelines. \n\n## Context  \n- All necessary details, including the section title, description, target audience, and tone, will be provided.  \n- The goal is to create engaging content that aligns with the audience's expectations and the blog post's objectives.  \n- Content must be supported by research, with sources clearly cited using hyperlinks.\n- Search engine optimization is a key aspect of this blog post\n\n## Instructions  \n1. Write the final content without including any introductory or concluding remarks about the writing process.  \n2. Conduct research using the serp tool to ensure credibility and relevance. Serp is useful because it helps you parse through Google searches getting the most relevant information implying that those keywords are SEO. \n3. Use the provided inputs to craft a focused section tailored to the target audience.  \n4. Include citations seamlessly within the content using hyperlinks to the original sources.  \n\n## Tools  \n- serp (for research and citations). \n\n## Citation Guidelines\n- Use the serp tool to gather information and cite sources\n- For each major claim or piece of information, include a hyperlinked inline citation\n- Format citations as HTML links with descriptive text:\n  <a href=\"[URL]\">[Source: Publication Name]</a>\n- When directly quoting from a source, use quotation marks and include the citation\n\n## Examples  \n- **Input**:  \n  - Section Title: \"The Psychology of Happy Patients\"  \n  - Description: Discuss strategies dental offices can use to improve patient experiences and satisfaction, such as personalized care and stress-reducing techniques.  \n  - Target Audience: Dentists and dental practice managers.  \n  - Tone: Informative yet approachable.  \n- **Output**:  \n  \"Creating a positive patient experience starts with understanding the key drivers of satisfaction in dental care. Personalized care, such as addressing individual patient concerns and tailoring treatments, can significantly boost trust and comfort [Source](https://example.com/personalized-care). Stress-reducing techniques, like offering noise-canceling headphones or aromatherapy in waiting rooms, have also been shown to alleviate anxiety and improve overall impressions of care [Source](https://example.com/stress-reduction). By focusing on these elements, dental practices can foster happier, more loyal patients.\"  \n\n## SOP (Standard Operating Procedure)  \n1. **Input Analysis**: Understand the section's title, description, target audience, and tone.  \n2. **Research**: Use the serp tool to gather relevant, credible information.  \n3. **Content Writing**: Craft a section based on the provided inputs, ensuring it is directly usable in the blog post.  \n4. **Cite Sources**: Integrate hyperlinks to all references within the content.  \n5. **Review and Deliver**: Proofread the content to ensure clarity, accuracy, and alignment with the target audience.  \n\n## Final Notes  \n- The output must start directly with the content, without introductory or transitional phrases.  \n- All sources must be clearly cited and integrated naturally into the text.  \n- Focus on delivering value and ensuring readability for the target audience.  \n---  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        100,
+        300
+      ],
+      "id": "c77de446-ba02-48b8-9bf5-28c48dd08e36",
+      "name": "Research Team"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        460,
+        380
+      ],
+      "id": "cac35286-a7da-45cc-bd2e-5e8e448c7052",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "title"
+            },
+            {
+              "fieldToAggregate": "output"
+            }
+          ]
+        },
+        "options": {
+          "mergeLists": true
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        640,
+        380
+      ],
+      "id": "7cf3df18-167e-4763-8cc8-e30ca817ad85",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=List of titles: {{ $json.title }}\nList of article content: {{ $json.output }}",
+        "options": {
+          "systemMessage": "=## Overview\nYou are an expert editor specializing in creating and refining content to output a high quality, formatted blog post which is Search Engine Optimized (SEO) following Google's E-E-A-T guidelines. You are given a list of titles and outputs and you will use these to create a blog post tailored towards the defined target audience. Create a section in the article for each title, with a hyperlinked source in each section based on the content.\n\n## Objective\n1. Create content for each title using the provided content\n2. Search engine optimized keywords and buzzwords to attract users to the blog \n3. Each section should contain inline citations *Don't leave any out*\n4. Improve the flow of the blog post and format it for readability\n\n## Citation Management\n1. Preserve all inline citations\n2. Standardize citation format\n3. Ensure citations don't disrupt the flow of reading\n4. Make sure citations provide relevant information\n\n## Source Section\n1. Create ONE \"Sources\" section at the end of the blog post\n2. Format each source entry consistently: \n   <li><a href=\"[URL]\">[Publication Name] - [Article Title]</a></li>\n3. Include complete URL for each source\n4. Organize all sources alphabetically\n5. Verify all links are functional\n\n## Output Format\n- Output is a full blog post without a main title, just the content and all information plus the subheadings of each section of the article\n- Main content with hyperlink citations in each section.\n- Headers for each section of the article\n- Sources section at the end with all links\n\n## Important ##\nOutput 1000 words maximum or else the automation breaks!\n\nToday's date is {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        800,
+        380
+      ],
+      "id": "4ec091ad-8405-4d39-87f6-b235abd2b5e4",
+      "name": "Editor"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Create a title for the incoming blog post. The tone of the blog post is {{ $('On form submission').item.json.Tone }} and the target audience is {{ $('On form submission').item.json['Target Audience'] }}.\n\nHere is the blog post:\n{{ $json.output }}\n\n# Output format\nOutput the title in plain text, no quotation marks, and capitalize the first letter of each word.\nExample: Is Artificial Intelligence A Friend Or Foe?",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1140,
+        380
+      ],
+      "id": "c58dcb6e-269d-48e0-8cdc-c160fac41113",
+      "name": "Create TItle",
+      "credentials": {
+        "openAiApi": {
+          "id": "phru1AMRCzwjmxvV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        760
+      ],
+      "id": "159670fc-b006-4bd1-a385-ff63595d550c",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "phru1AMRCzwjmxvV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        740
+      ],
+      "id": "f97c4004-1757-4b87-a908-2d2fab4731b5",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "ix27WpwCrwUXTMXE",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=BlogPost Topic: {{ $json.Topic }}\nBlogPost Tone: {{ $json.Tone }}\nBlogPost Target Audience: {{ $json['Target Audience'] }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview  \nYou are an AI agent responsible for planning the sections of a blog post by creating an engaging table of contents tailored to the blog post's topic, tone, and target audience. This blog post's purpose is to be Search Engine Optimized (SEO) following Google's E-E-A-T guidelines.  \n\n## Context  \n- The blog post will vary in topic, tone, and target audience depending on the request. \n- Your role is to use the \"serp\" tool to search for relevant topics and craft a high-level, engaging table of contents. Serp is useful to scrape Google searches for the topic of the blog post and identify keywords that are SEO (optimized).\n- The table of contents should resonate with the target audience and encourage them to read the full blog post. \n- The buzzwords should improve chances of Google search rankings placing the website using this blog post on a higher ranking encouraging more users to click on the website. \n\n## Instructions  \n1. Analyze the incoming information, including the blog post topic, tone, and target audience details.  \n2. Use the \"serp\" tool to research relevant and trending subtopics related to the main blog post topic. Again, remember the role of serp, do not use it more than necessary, this is mostly to receive buzzwords, keywords and relevant information that is SEO. \n3. Based on your findings, create a table of contents with high-level, engaging topics tailored to the target audience.  \n4. Ensure the topics align with the blog post's tone and are structured to maintain the reader's interest.  \n5. Include brief descriptions for each section if requested.  \n\n## Tools  \n- Serp tool for internet research  \n- Predefined audience profiles (if provided)  \n\n## Examples  \n- **Input:**  \n  - Topic: \"Sustainable Living\"  \n  - Tone: Informative yet approachable  \n  - Target Audience: Young adults interested in eco-friendly lifestyles  \n\n- **Output:**  \n  Table of Contents:  \n  1. \"What is Sustainable Living? A Beginner’s Guide\"  \n  2. \"Top 10 Small Changes for a Big Impact\"  \n  3. \"The Science Behind Sustainability: Why It Matters\"  \n  4. \"Spotlight on Innovations: Green Tech of 2025\"  \n  5. \"Inspiration Corner: Stories of Everyday Eco-Warriors\"  \n\n- **Input:**  \n  - Topic: \"Remote Work Tips\"  \n  - Tone: Professional yet motivational  \n  - Target Audience: Corporate professionals transitioning to remote work  \n\n- **Output:**  \n  Table of Contents:  \n  1. \"Remote Work Revolution: Adapting to the New Norm\"  \n  2. \"Home Office Hacks for Maximum Productivity\"  \n  3. \"Balancing Act: Work-Life Harmony Tips\"  \n  4. \"Top Collaboration Tools Every Remote Team Needs\"  \n  5. \"Success Stories: How Remote Work Changed Lives\"  \n\n## SOP (Standard Operating Procedure)  \n1. Review the provided details about the blog post's topic, tone, and target audience.  \n2. Use the \"serp\" tool to search for trending, relevant, and engaging subtopics.  \n3. Brainstorm 4-6 high-level topics that fit within the theme of the blog post and appeal to the target audience.  \n4. Verify that each section aligns with the tone and goals of the blog post.  \n5. Finalize the table of contents and, if requested, provide brief descriptions for each section.  \n\n## Final Notes  \n- Keep the topics concise and engaging to maximize interest.  \n- Adapt your tone and choice of topics to suit the specific audience profile.  \n- Always aim for a balance of informative and engaging content to maintain readership.  \n---  \nHere is the current date {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -800,
+        400
+      ],
+      "id": "a9576a04-0d41-4407-a8ca-19f52d7e4628",
+      "name": "BlogPost Expert"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "BlogPost Expert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "BlogPost Expert",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Project Planner": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Research Team",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Research Team": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Editor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Editor": {
+      "main": [
+        [
+          {
+            "node": "Create TItle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create TItle": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Team",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Editor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Team",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "BlogPost Expert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BlogPost Expert": {
+      "main": [
+        [
+          {
+            "node": "Project Planner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a80ea479-98c6-4e89-98b0-1dc16431df0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8698dafc414a4d2e174f58318457b35b23431574fd73dc3f9b29474adf281e4"
+  },
+  "id": "bppcML8hNseKy8q8",
+  "tags": []
+}

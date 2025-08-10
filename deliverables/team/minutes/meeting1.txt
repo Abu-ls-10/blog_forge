@@ -1,0 +1,28 @@
+June 3 - 1hr
+
+First meeting notes:
+
+not a solidified tech stack, but we can expect to use these tools:
+make.com
+n8n (self hosted)
+lovable 
+bolt.new
++ the tools listed in the notion listing...
+
+Who are the target users? 
+Internal use, People that have a website and wants to get it high ranked, so they want to do SEO optimization. Mainly for Small business SAAS that wants organic traffic.
+
+Content creation tool that helps improve the google ranking, or attempts to apply SEO to get high rankings. 
+
+We are building first MVP. 
+
+Why would anyone choose our product? Instead of something like ChatGPT? Simply, we provide the quality and assurance that what they receive is actually SEO optimized and they do not need to use multiple tools to verify that their blogs are actually valuable. 
+
+Communication going forward:
+Async meeting, and best way to communicate with email. We can send the questions by Monday (or another day) then on next meeting the partner will answer the questions. 
+
+Goals before next meeting: figure out the roles for everyone. 
+
+Very close split between frontend and backend. 
+
+We will need to develop the Figma designs for the product. But focus on backend not frontend.

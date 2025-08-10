@@ -12,7 +12,7 @@ Designed for marketers, content creators, and small business owners, BlogForge d
 
 Built with React, TailwindCSS, Supabase, and n8n, BlogForge combines a modern frontend with automated backend workflows to deliver a seamless and beginner-friendly content creation experience.
 
-🌐 **Live App:** [here](https://6-seo-search-engine.vercel.app/)
+🌐 **Live App:** (Kept private)
 
 ---
 

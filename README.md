@@ -1,6 +1,6 @@
-# SEO Content Engine / WeWantTwo
+# BlogForge - AI SEO Content Engine
 
-> _Note:_ This `README.md` will evolve throughout the term and serve as a key reference for TAs, and our partner.
+> _Note:_ This project was developed as a project for a course at UofT, partnering with High Ticket Closing Agency Inc. For security and confidentiality, the codebase is kept private. This repository serves as a presentation of the project for my portfolio.
 
 ---
 
@@ -12,7 +12,7 @@ Designed for marketers, content creators, and small business owners, BlogForce d
 
 Built with React, TailwindCSS, Supabase, and n8n, BlogForce combines a modern frontend with automated backend workflows to deliver a seamless and beginner-friendly content creation experience.
 
-🌐 **Live App:** [here](https://6-seo-search-engine-hfo6.vercel.app/)
+🌐 **Live App:** [here](https://6-seo-search-engine.vercel.app/)
 
 ---
 
@@ -58,71 +58,6 @@ Built with React, TailwindCSS, Supabase, and n8n, BlogForce combines a modern fr
 - Only supports English-language content.
 
 - Currently does not support image or media embedding in generated content.
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-
-Before you begin, ensure you have the following:
-
-- **Node.js** v18+
-- **npm** v9+
-- A **Supabase** project (for database + auth)
-- An **n8n** instance (hosted or local) for automation workflows
-- GPT API access (e.g., OpenAI)
-
-### Clone the Repo
-
-```bash
-git clone https://github.com/csc301-2025-y/6-SEOSearchEngine/
-cd 6-SEOSearchEngine/application/frontend/
-```
-
-### Environment Variables
-
-Create a `.env` file in `frontend/` and add the following:
-
-```env
-VITE_SUPABASE_URL=https://teauxcpcqbgdbvlorksj.supabase.co/
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYXV4Y3BjcWJnZGJ2bG9ya3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyOTQzOTMsImV4cCI6MjA2ODg3MDM5M30.0Kjzy_T2Ge4GTT7Ty8F4zmaLkdqVMRoXrcZ3piNF8r0
-VITE_API_KEY=https://saiyan5.app.n8n.cloud/webhook/7c46714f-ba10-47de-a86e-b169688800b9
-```
-
-### Install Dependencies
-
-```bash
-npm install
-```
-
-### Run the App Locally
-
-```bash
-npm run dev
-```
-
-The app will be available at `http://localhost:5173`
-
-### Backend & Workflow Setup
-
-- Make sure the **Supabase** instance is initialized with the correct tables/auth config.
-- Connect **n8n** workflow to GPT and set up a webhook (Learn more below).
-- (Optional) Seed any demo data via Supabase or a script if provided.
-
-### Production Build
-
-To build the app for production:
-
-```bash
-npm run build
-```
-
-### Service Start Order (if deploying multiple services)
-
-1. Supabase (auth + DB)
-2. n8n (automation workflow)
-3. Frontend (React/Vite)
 
 ---
 
@@ -184,15 +119,6 @@ Follow these steps to get started with BlogForce:
 
 5. Merging to main triggers automatic deployment (via Vercel).
 
-### 📜Commands & Scripts
-
-Most backend logic and API handling is managed through n8n workflows.  
-Developers only need to install dependencies and run the frontend locally:
-
-```bash
-npm install
-npm run dev
-```
 
 ### 🌐API Endpoints
 
@@ -211,15 +137,9 @@ The improvement made to our old workflow is attributed to prompt engineering, Se
 
 Furthermore, we have user credentials stored in Supabase securely so that their organization and workspaces, along with their business goals can potentially be accessed by the n8n workflow in the future to customize and authenticize the outputted content. This Supabase connection is used in the workflow to store previous generations of blog posts if the user wishes to use more than one prompt.
 
-The new workflow can be downloaded as a JSON file [here](https://github.com/csc301-2025-y/6-SEOSearchEngine/blob/main/application/backend/n8n_workflow.json). To test it out you will need to:
-
-- use self hosted version of n8n found [here](https://docs.n8n.io/hosting/).
-- connect OpenAI, SerpAPI credentials
-- gain access to Supabase account
-
 ### 🔄 Database Visualization
 
-![Supabase Diagram](./application/backend/images/workspace-feature-backend_database.png)
+![Supabase Diagram](./docs/workspace-feature-backend_database.png)
 
 Our database is hosted on **Supabase** and designed to fully support **multi-workspace functionality** with granular role-based permissions.  
 
@@ -285,7 +205,7 @@ This schema is optimized for:
 | Name            | Role                                                               |
 | --------------- | ------------------------------------------------------------------ |
 | Abu Zahed       | Full-Stack Developer, Product Manager                              |
-| Abuzar Ansari   | Full-Stack Developer, DevOps                                       |
+| Abuzar Ansari   | Full-Stack Developer, DevOps Manager                               |
 | Barron Jiang    | Full-Stack Developer, Meeting Minutes Notetaker                    |
 | Akshat Oza      | Back-end Developer, Development Manager                            |
 | Kevin Umaiyalan | Back-end Developer                                                 |

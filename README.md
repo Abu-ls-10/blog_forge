@@ -6,11 +6,11 @@
 
 ## 📖 Project Overview
 
-**BlogForge** is a no-code, web-based SEO content engine that automates the creation of high-quality, search-optimized blog posts. By removing the need for technical or SEO expertise, BlogForge enables day-one content creators to produce professional, search-friendly content with just a few clicks.
+**BlogForge** is a no-code, web-based AI SEO content engine that automates the creation of high-quality, search-optimized blog posts. By removing the need for technical or SEO expertise, BlogForge enables day-one content creators to produce professional, search-friendly content with just a few clicks.
 
 Designed for marketers, content creators, and small business owners, BlogForge dramatically reduces the time and cost of producing scalable content. Users can enter a topic or keyword and instantly generate SEO-ready blog posts, making it possible to start improving search rankings right away.
 
-Built with React, TailwindCSS, Supabase, and n8n, BlogForge combines a modern frontend with automated backend workflows to deliver a seamless and beginner-friendly content creation experience.
+Built with React, TailwindCSS, Supabase, and n8n (utilizing SerpAPI and OpenAI), BlogForge combines a modern frontend with automated backend workflows to deliver a seamless and beginner-friendly content creation experience.
 
 🌐 **Live App:** (Kept private)
 
